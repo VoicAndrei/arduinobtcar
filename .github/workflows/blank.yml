@@ -1,36 +1,189 @@
-# This is a basic workflow to help you get started with Actions
+int enA = 9;
+int in1 = 8;
+int in2 = 7;
+int pump = 12;
+int i;
+// Motor B
+ 
+int enB = 3;
+int in3 = 5;
+int in4 = 4;
+int state = 0;
+void motorAtare()
+ { // Turn on motor A
+ 
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  analogWrite(enA,255);
+ }
+ void motorAtareinvers()
+ { // Turn on motor A
+ 
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  analogWrite(enA,255);
+ }
+  void motorBtare()
+ { // Turn on motor B
+ 
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
+  analogWrite(enB,255);
+ }
+  void motorBtareinvers()
+ { // Turn on motor B
+ 
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
+  analogWrite(enB,255);
+ }
+ void masinastangatare()
+ {
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
+  analogWrite(enA,255);
+  analogWrite(enB,255);
+ }
+ void masinadreaptatare()
+ {
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
+  analogWrite(enA,255);
+  analogWrite(enB,255);
+ }
+ void motorAincet()
+ { // Turn on motor A
+ 
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  for(i=1;i<200;i++)
+  analogWrite(enA,i);
+ }
+  void motorBincet()
+ { // Turn on motor B
+ 
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
+  for(i=1;i<200;i++)
+  analogWrite(enB,i);
+ }
+void motorAinapoi()
+ { // Turn on motor A
+ 
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  analogWrite(enA,10);
+ }
+ void motorBinapoi()
+ { // Turn on motor B
+ 
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
+  analogWrite(enB,10);
+ }
 
-name: CI
+void masinaINAINTEviteza()
+ { // Turn on motor A
+ 
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
+  analogWrite(enA,255);
+  analogWrite(enB,255);
+ }
+void masinaINAINTEincet()
+ { 
+ 
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
+  for(i=1;i<200;i++)
+  {analogWrite(enA,i);
+  analogWrite(enB,i);
+  }
+ }
+ void masinaINAPOI()
+ { 
+ 
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
+  for(i=1;i<250;i++)
+  {analogWrite(enA,i);
+  analogWrite(enB,i);
+  }
+ }
 
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+ void masinaFRANA()
+{
+ 
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, LOW);  
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, LOW); 
+ 
+  }
+  
+  void motorAstop()
+  {
+ 
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, LOW);  
+ 
+  }
+  void motorBstop()
+  {
+     
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, LOW);  
+ 
+  }
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+  void pompaStart()
+  {
+    digitalWrite(pump, HIGH);
+  }
+  void pompaStop()
+  {
+    digitalWrite(pump, LOW);
+  }
+  
+void setup() {
+  pinMode(enA, OUTPUT);
+  pinMode(enB, OUTPUT);
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(in3, OUTPUT);
+  pinMode(in4, OUTPUT);
+  pinMode(pump, OUTPUT);
+  digitalWrite(pump, HIGH);
+Serial.begin(9600); // Default connection rate for my BT module
+}
+void loop() {
+  if(Serial.available() > 0){
+ char state = Serial.read();
+  
+  switch(state)
+  {
+    case 'A' :{Serial.println("masina inainte viteza");masinaINAINTEviteza();break;}
+    case 'B' :{Serial.println("masina inainte incet");masinaINAINTEincet();break;}
+    case 'C' :{Serial.println("masina frana");masinaFRANA();break;}
+    case 'D' :{Serial.println("masina inapoi");masinaINAPOI();break;}
+    case 'E' :{Serial.println("stanga tare");masinastangatare();break;}
+    case 'F' :{Serial.println("dreapta tare");masinadreaptatare();break;}
+    case 'G' :{Serial.println("stanga incet");motorAincet();break;}
+    case 'H' :{Serial.println("dreapta incet");motorBincet();break;}
+    case 'K' :{Serial.println("pompa pornita");pompaStop();break;}
+    case 'L' :{Serial.println("pompa oprita");pompaStart();break;}
+    default : break;
+  }
+  }
+  delay(50);
+}
